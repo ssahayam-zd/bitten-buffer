@@ -81,7 +81,9 @@ object JsonParserSuite extends SimpleTaskSuite with Checkers {
 
     println(s"capacity: ${byteBuffer.capacity()}")
     println(s"limit: ${byteBuffer.limit()}")
-    
+    println(s"offset: ${byteBuffer.arrayOffset()}")
+    println(s"remaining: ${byteBuffer.remaining()}")
+
     expect(true)
   }
 
@@ -107,5 +109,8 @@ object JsonParserSuite extends SimpleTaskSuite with Checkers {
  // <p> A buffer's <i>position</i> is the index of the next element to be
  // read or written.  A buffer's position is never negative and is never
  // greater than its limit.  </p>  
+
+ // arrayOffset - offset within this buffer's backing array of the first
+//  element of the buffer
 }
 
