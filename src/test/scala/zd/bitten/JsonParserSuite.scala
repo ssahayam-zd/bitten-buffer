@@ -10,6 +10,7 @@ import io.circe.jawn.parseByteArray
 import io.circe.jawn.parseByteBuffer
 import io.circe.literal._
 import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets
 
 object JsonParserSuite extends SimpleTaskSuite with Checkers {
 
@@ -29,13 +30,23 @@ object JsonParserSuite extends SimpleTaskSuite with Checkers {
   //   expect.eql(Right(jsonContent), resultE)
   // }
 
-  // pureTest("A JsonParser should parse Json - parseByteBuffer") {
-  //   val byteBuffer: ByteBuffer = Printer.noSpaces.printToByteBuffer(jsonContent)
+  pureTest("A JsonParser should parse Json - parseByteBuffer") {
+    val byteBuffer: ByteBuffer = Printer.noSpaces.printToByteBuffer(jsonContent)
 
-  //   val resultE:  Either[ParsingFailure, Json] = parseByteBuffer(byteBuffer)
+    val resultE:  Either[ParsingFailure, Json] = parseByteBuffer(byteBuffer)
 
-  //   expect.eql(Right(jsonContent), resultE)
-  // }
+    expect.eql(Right(jsonContent), resultE)
+  }
+
+  pureTest("A JsonParser should parse Json - String") {
+    val jsonString: String = jsonContent.noSpaces
+
+    val bytes = jsonString.getBytes(StandardCharsets.UTF_8)
+
+    val resultE:  Either[ParsingFailure, Json] = parseByteArray(bytes)
+
+    expect.eql(Right(jsonContent), resultE)
+  }
 
   //https://github.com/circe/circe/blob/e6685317bc9e6e65539bb6194900e0e754fbcb7c/modules/tests/shared/src/main/scala/io/circe/tests/PrinterSuite.scala#L23
   pureTest("A JsonParser should parse Json - parseByteArray - take 2") {
