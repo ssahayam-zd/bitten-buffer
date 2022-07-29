@@ -117,5 +117,13 @@ object JsonParserSuite extends SimpleTaskSuite with Checkers {
 
  // arrayOffset - offset within this buffer's backing array of the first
 //  element of the buffer
+
+
+
+
+
+//TL;DR: When using a ByteBuffer ensure to copy only the data in the buffer 
+//and not the full buffer. You can do this with the .get function that takes
+//in an appropriately-sized array.
 }
 
