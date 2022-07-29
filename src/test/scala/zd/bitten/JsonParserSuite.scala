@@ -12,6 +12,11 @@ import io.circe.literal._
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
+
+// Requirement: Convert a Json payload into bytes and create an EnginePosition.
+// The EnginePosition is transfer to the Writer and subsequently returned to be 
+// persisted into the JobStore so save our move progress. These bytes would
+// then be decoded into an EnginePosition when resuming a move.
 object JsonParserSuite extends SimpleTaskSuite with Checkers {
 
   private val jsonContent = json"""
@@ -30,20 +35,20 @@ object JsonParserSuite extends SimpleTaskSuite with Checkers {
     expect.eql(Right(jsonContent), resultE)
   }
 
-  pureTest("A JsonParser should parse Json - parseByteBuffer") {
-    val byteBuffer: ByteBuffer = Printer.noSpaces.printToByteBuffer(jsonContent)
-
-    val resultE:  Either[ParsingFailure, Json] = parseByteBuffer(byteBuffer)
-
-    expect.eql(Right(jsonContent), resultE)
-  }
-
   pureTest("A JsonParser should parse Json - String") {
     val jsonString: String = jsonContent.noSpaces
 
     val bytes = jsonString.getBytes(StandardCharsets.UTF_8)
 
     val resultE:  Either[ParsingFailure, Json] = parseByteArray(bytes)
+
+    expect.eql(Right(jsonContent), resultE)
+  }  
+
+  pureTest("A JsonParser should parse Json - parseByteBuffer") {
+    val byteBuffer: ByteBuffer = Printer.noSpaces.printToByteBuffer(jsonContent)
+
+    val resultE:  Either[ParsingFailure, Json] = parseByteBuffer(byteBuffer)
 
     expect.eql(Right(jsonContent), resultE)
   }
