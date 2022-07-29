@@ -1,0 +1,7 @@
+*.sublime-*
+target
+.ctags_srcs
+.tags
+.metals
+.bloop
+.bsp
