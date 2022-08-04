@@ -43,6 +43,36 @@ object JsonParserSuite extends SimpleTaskSuite with Checkers {
     val resultE:  Either[ParsingFailure, Json] = parseByteArray(bytes)
 
     expect.eql(Right(jsonContent), resultE)
+  } 
+
+  pureTest("Show the diff") {
+    val jsonString: String = jsonContent.noSpaces
+    val stringBytes = jsonString.getBytes(StandardCharsets.UTF_8)
+
+    val byteBuffer: ByteBuffer = Printer.noSpaces.printToByteBuffer(jsonContent)
+    val byteBufferBytes = byteBuffer.array()
+
+    printArray("stringBytes", stringBytes)
+    printArray("byteBufferBytes", byteBufferBytes)
+
+    println(s"capacity: ${byteBuffer.capacity()}")
+    println(s"limit: ${byteBuffer.limit()}")
+    println(s"offset: ${byteBuffer.arrayOffset()}")
+    println(s"remaining: ${byteBuffer.remaining()}")
+
+    expect(true)
+  }
+
+  private def printArray(banner: String, values: Array[Byte]): Unit = {
+    println(s"${"=" * 10}> $banner")
+
+    values.zipWithIndex.foreach { 
+      case (b, index) => 
+        val charValue = b.asInstanceOf[Char]
+        val result = s"[$index]=${charValue} (${b})"
+        println(result)
+    }
+    
   }  
 
   pureTest("A JsonParser should parse Json - parseByteBuffer") {
@@ -74,35 +104,7 @@ object JsonParserSuite extends SimpleTaskSuite with Checkers {
     expect.eql(Right(jsonContent), resultE)
   } 
 
-  pureTest("Show the diff") {
-    val jsonString: String = jsonContent.noSpaces
-    val stringBytes = jsonString.getBytes(StandardCharsets.UTF_8)
 
-    val byteBuffer: ByteBuffer = Printer.noSpaces.printToByteBuffer(jsonContent)
-    val byteBufferBytes = byteBuffer.array()
-
-    printArray("stringBytes", stringBytes)
-    printArray("byteBufferBytes", byteBufferBytes)
-
-    println(s"capacity: ${byteBuffer.capacity()}")
-    println(s"limit: ${byteBuffer.limit()}")
-    println(s"offset: ${byteBuffer.arrayOffset()}")
-    println(s"remaining: ${byteBuffer.remaining()}")
-
-    expect(true)
-  }
-
-  private def printArray(banner: String, values: Array[Byte]): Unit = {
-    println(s"${"=" * 10}> $banner")
-
-    values.zipWithIndex.foreach { 
-      case (b, index) => 
-        val charValue = b.asInstanceOf[Char]
-        val result = s"[$index]=${charValue} (${b})"
-        println(result)
-    }
-    
-  }
 
  // <p> A buffer's <i>capacity</i> is the number of elements it (can) contain.  The
  // capacity of a buffer is never negative and never changes.  </p>
