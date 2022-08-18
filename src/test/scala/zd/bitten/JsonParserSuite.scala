@@ -1,6 +1,5 @@
 package zd.bitten
 
-import weaver.monixcompat.SimpleTaskSuite
 import weaver.scalacheck.Checkers
 import io.circe.Json
 import io.circe.ParsingFailure
@@ -17,7 +16,7 @@ import java.nio.charset.StandardCharsets
 // The EnginePosition is transfer to the Writer and subsequently returned to be 
 // persisted into the JobStore so save our move progress. These bytes would
 // then be decoded into an EnginePosition when resuming a move.
-object JsonParserSuite extends SimpleTaskSuite with Checkers {
+object JsonParserSuite extends IgnoredSimpleTaskSuite with Checkers {
 
   private val jsonContent = json"""
       {
@@ -46,9 +45,11 @@ object JsonParserSuite extends SimpleTaskSuite with Checkers {
   } 
 
   pureTest("Show the diff") {
+    //String -> Array[Byte]
     val jsonString: String = jsonContent.noSpaces
     val stringBytes = jsonString.getBytes(StandardCharsets.UTF_8)
 
+    //ByteBuffer -> Array[Byte]
     val byteBuffer: ByteBuffer = Printer.noSpaces.printToByteBuffer(jsonContent)
     val byteBufferBytes = byteBuffer.array()
 
